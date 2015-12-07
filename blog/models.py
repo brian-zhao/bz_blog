@@ -1,19 +1,19 @@
-from django.db import models
 from google.appengine.ext import db
-from google.appengine.api import users
-import webapp2
-import datetime
 
-class Blog(models.Model):
+
+class Blog(db.Model):
     title = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
     body = db.StringProperty(required=True)
     posted = db.DateProperty()
     author = db.StringProperty()
+    idx = db.StringProperty()
 
     meta = {
         'indexes': [
             'title',
-            'slug'
+            'slug',
+            'posted',
+            'idx'
         ]
     }
