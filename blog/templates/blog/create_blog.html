@@ -2,7 +2,7 @@
 
 
 {% block content %}
-    <form id='add-blog' role='form' method='POST' action='{% url create_blog %}'>
+    <form id='add-blog' role='form' method='POST' action='{% url create_blog %}' enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class='container-fluid'>
@@ -19,6 +19,11 @@
             <div class='form-group col-lg-12'>
                 <label for="title">Body:</label>
                 <textarea class="form-control" rows="6" placeholder='' name='body' id='body'></textarea>
+            </div>
+
+            <div class='form-group col-lg-12'>
+                <label for="title">Image:</label>
+                <input type="file" class="form-control" name='image' id='image'>
             </div>
 
             <div class='form-group col-lg-12'>

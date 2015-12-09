@@ -15,7 +15,7 @@
             An anonymous person wrote:
           {% endif %}
           <p><blockquote>{{ blog.body|escape }}</blockquote></p>
-          <p><a href='/blog/{{ blog.idx }}'>View details.</a></p>
+          <p><a href='/blog/{{ blog.key.id }}'>View details.</a></p>
           </div>
         {% endfor %}
     {% else %}

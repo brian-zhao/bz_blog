@@ -2,17 +2,18 @@
 
 
 {% block content %}
-    {% for blog in blogs %}
         <div id='blog' class='col-lg-12 jumbotron'>
             <div class='row-fluid'>
-                <div class='col-lg-12'>
+                <div class='col-lg-9'>
                 <p><b>Title:</b>{{ blog.title }}</p>
                 <p><b>Slug:</b>{{ blog.slug }}</p>
                 <p><b>Author:</b> {{ blog.author }}</p>
                 <p><b>Blog:</b> {{ blog.body }}</p>
                 <p><b>Date Posted:</b> {{ blog.posted }}</p>
-              </div>
+                </div>
+                <div class='col-lg-3'>
+                <img src="{{blog.serving_url}}"></img>
+                </div>
           </div>
         </div>
-    {% endfor %}
 {% endblock content %}
