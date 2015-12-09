@@ -1,5 +1,5 @@
-application: bzblog-1142
-version: 1
+application: bzblog-1152
+version: 2
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -16,6 +16,8 @@ libraries:
 
 - name: django
   version: 1.4
+- name: PIL
+  version: "1.1.7"
 
 env_variables:
   DJANGO_SETTINGS_MODULE: 'bz_blog.settings'
