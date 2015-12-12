@@ -12,7 +12,7 @@ from blog.models import Blog
 
 
 def home(request):
-    blogs = ndb.gql("SELECT * FROM Blog ORDER BY posted")
+    blogs = ndb.gql("SELECT * FROM Blog ORDER BY posted DESC")
     return render(request, "blog/index.html", {'blogs': blogs})
 
 
@@ -26,7 +26,7 @@ def blog(request, idx):
 def create_blog(request):
     if request.method == 'POST':
         items = request.POST
-        b = Blog(title=items['title'], slug=items['slug'], body=items['body'])
+        b = Blog(title=items['title'], slug=items['slug'], body=str(items['body']))
         b.posted = datetime.datetime.now().date()
         b.author = ''
         if get_uploads(request, 'image'):

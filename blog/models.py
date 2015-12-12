@@ -5,7 +5,7 @@ from google.appengine.api import images
 class Blog(ndb.Model):
     title = ndb.StringProperty(required=True)
     slug = ndb.StringProperty(required=True)
-    body = ndb.StringProperty(required=True)
+    body = ndb.BlobProperty(required=True)
     posted = ndb.DateProperty(auto_now_add=True)
     author = ndb.StringProperty()
     blob_key = ndb.BlobKeyProperty()
