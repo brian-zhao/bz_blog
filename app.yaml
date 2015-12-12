@@ -19,6 +19,10 @@ libraries:
   version: 1.4
 - name: PIL
   version: "1.1.7"
+- name: ssl
+  version: latest
+- name: pycrypto
+  version: latest
 
 env_variables:
   DJANGO_SETTINGS_MODULE: 'bz_blog.settings'
