@@ -10,11 +10,14 @@ from google.appengine.api import images
 from google.appengine.ext import blobstore
 
 from blog.models import Blog
-# from identitytoolkit import gitkitclient
+from identitytoolkit import gitkitclient
 
 
-# server_config_json = path.join(path.dirname(path.realpath(__file__)), 'gitkit-server-config.json')
-# gitkit_instance = gitkitclient.GitkitClient.FromConfigFile(server_config_json)
+gitkit = gitkitclient.GitkitClient(
+    client_id="272073482545-snlclt17idhchcurcc46vs592kbugt22.apps.googleusercontent.com",
+    service_account_email='account@bzblog-1152.iam.gserviceaccount.com',
+    service_account_key=path.join(path.dirname(path.realpath(__file__)), 'private-ke.p12'),
+    cookie_name='gtoken')
 
 
 def home(request):
@@ -39,14 +42,15 @@ def create_blog(request):
         b = Blog(title=items['title'], slug=items['slug'], body=str(items['body']))
         b.posted = datetime.datetime.now().date()
 
-        # if 'gtoken' in request.cookies:
-        #     gitkit_user = gitkit_instance.VerifyGitkitToken(request.cookies['gtoken'])
-        #     if gitkit_user:
-        #         b.author = gitkit_user.email
+        if 'gtoken' in request.COOKIES:
+            gitkit_user = gitkit.VerifyGitkitToken(request.COOKIES['gtoken'])
+            if gitkit_user:
+                b.author = gitkit_user.email
 
-        if get_uploads(request, 'image'):
+        if get_uploads(request, 'image') and request.FILES.get('image'):
             blob_key = get_uploads(request, 'image')[0].key()
             b.blob_key = blob_key
+
         b.put()
 
         return HttpResponseRedirect('/')
