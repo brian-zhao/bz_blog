@@ -1,14 +1,15 @@
 from google.appengine.ext import ndb
+from google.appengine.api import images
 
 
 class Blog(ndb.Model):
     title = ndb.StringProperty(required=True)
     slug = ndb.StringProperty(required=True)
-    body = ndb.StringProperty(required=True)
+    body = ndb.BlobProperty(required=True)
     posted = ndb.DateProperty(auto_now_add=True)
     author = ndb.StringProperty()
-    image = ndb.BlobProperty(default=None)
-    serving_url = ndb.StringProperty(indexed=False)
+    blob_key = ndb.BlobKeyProperty()
+    thumnail = ndb.ComputedProperty(lambda self: images.get_serving_url(self.blob_key, size=32) if self.blob_key else '')
 
     @classmethod
     def query_blog(cls, ancestor_key):

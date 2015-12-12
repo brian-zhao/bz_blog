@@ -2,7 +2,7 @@
 
 
 {% block content %}
-    <form id='add-blog' role='form' method='POST' action='{% url create_blog %}' enctype="multipart/form-data">
+    <form id='add-blog' role='form' method='POST' action='{{upload_url}}' enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class='container-fluid'>
@@ -30,6 +30,6 @@
                 <input type='submit' class='btn btn-primary' value='Submit' />
             </div>
         </div>
-
     </form>
+
 {% endblock content %}
