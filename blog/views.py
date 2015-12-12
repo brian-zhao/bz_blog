@@ -1,5 +1,6 @@
 import cgi
 import datetime
+from os import path
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -9,11 +10,16 @@ from google.appengine.api import images
 from google.appengine.ext import blobstore
 
 from blog.models import Blog
+# from identitytoolkit import gitkitclient
+
+
+# server_config_json = path.join(path.dirname(path.realpath(__file__)), 'gitkit-server-config.json')
+# gitkit_instance = gitkitclient.GitkitClient.FromConfigFile(server_config_json)
 
 
 def home(request):
     blogs = ndb.gql("SELECT * FROM Blog ORDER BY posted DESC")
-    return render(request, "blog/index.html", {'blogs': blogs})
+    return render(request, "blog/index.html", {'blogs': blogs, })
 
 
 def blog(request, idx):
@@ -23,12 +29,21 @@ def blog(request, idx):
     return render(request, "blog/blog.html", {'blog': blog, 'image_url': image_url})
 
 
+def signin(request):
+    return render(request, 'blog/widget.html')
+
+
 def create_blog(request):
     if request.method == 'POST':
         items = request.POST
         b = Blog(title=items['title'], slug=items['slug'], body=str(items['body']))
         b.posted = datetime.datetime.now().date()
-        b.author = ''
+
+        # if 'gtoken' in request.cookies:
+        #     gitkit_user = gitkit_instance.VerifyGitkitToken(request.cookies['gtoken'])
+        #     if gitkit_user:
+        #         b.author = gitkit_user.email
+
         if get_uploads(request, 'image'):
             blob_key = get_uploads(request, 'image')[0].key()
             b.blob_key = blob_key

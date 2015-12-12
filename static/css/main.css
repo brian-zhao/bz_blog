@@ -2,3 +2,6 @@ body {
   font-family: Verdana, Helvetica, sans-serif;
   background-color: #DDDDDD;
 }
+.gitkit-user-card-menu{
+    z-index: 1000 !important;
+}

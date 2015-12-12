@@ -8,6 +8,8 @@ urlpatterns = patterns('',
     url(r'^$', 'blog.views.home', name='home'),
     url(r'^blog/(?P<idx>\w{0,256})/$', 'blog.views.blog', name='blog_details'),
     url(r'^create_blog','blog.views.create_blog', name='create_blog'),
+    url(r'^widget','blog.views.signin', name='signin'),
+
     url(r'^admin/', include(admin.site.urls)),
     # (r'^accounts/create_user/$', CreateUser.as_view()),
     # (r'^accounts/login/$', 'django.contrib.auth.views.login',
