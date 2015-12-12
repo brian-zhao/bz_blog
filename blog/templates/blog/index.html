@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Welcome to my blog{% endblock %}
+{% block title %}BZ blog{% endblock %}
 
 {% block content %}
+  <div class="row">
+    <div class="col-md-8"><h2> BZ blog </h2></div>
+    <div class="col-md-4"><div id="navbar"></div></div>
+  </div>
   <div class="container-fluid" id='blog-wrapper'>
     <p>
       <a href='{% url create_blog %}'>Create a Blog.</a>
@@ -11,7 +15,7 @@
           <div class='col-lg-12 jumbotron'>
             <div class='col-lg-10'>
               {% if blog.author %}
-                <p><b>{{ blog.author.username }}</b> wrote:<p>
+                <p><b>{{ blog.author }}</b> wrote:<p>
               {% else %}
                 An anonymous person wrote:
               {% endif %}
