@@ -1,9 +1,9 @@
 import cgi
-import datetime
 from os import path
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 from google.appengine.ext import ndb
 from google.appengine.api import images
@@ -14,14 +14,14 @@ from identitytoolkit import gitkitclient
 
 
 gitkit = gitkitclient.GitkitClient(
-    client_id="272073482545-snlclt17idhchcurcc46vs592kbugt22.apps.googleusercontent.com",
+    client_id='272073482545-snlclt17idhchcurcc46vs592kbugt22.apps.googleusercontent.com',
     service_account_email='account@bzblog-1152.iam.gserviceaccount.com',
     service_account_key=path.join(path.dirname(path.realpath(__file__)), 'private-ke.p12'),
     cookie_name='gtoken')
 
 
 def home(request):
-    blogs = ndb.gql("SELECT * FROM Blog ORDER BY posted DESC")
+    blogs = Blog.query().order(-Blog.posted)
     return render(request, "blog/index.html", {'blogs': blogs, })
 
 
@@ -39,8 +39,11 @@ def signin(request):
 def create_blog(request):
     if request.method == 'POST':
         items = request.POST
+        if not items['title'] or not items['slug'] or items['body']:
+            messages.error(request, 'Title, Slug, Body are required fields.')
+            return redirect('create_blog')
+
         b = Blog(title=items['title'], slug=items['slug'], body=str(items['body']))
-        b.posted = datetime.datetime.now().date()
 
         if 'gtoken' in request.COOKIES:
             gitkit_user = gitkit.VerifyGitkitToken(request.COOKIES['gtoken'])
@@ -59,6 +62,20 @@ def create_blog(request):
 
 
 def get_uploads(request, field_name=None, populate_post=False):
+    """
+    http://appengine-cookbook.appspot.com/recipe/blobstore-get_uploads-helper-function-for-django-request/
+
+    Get uploads sent to this handler.
+
+    Args:
+    field_name: Only select uploads that were sent as a specific field.
+    populate_post: Add the non blob fields to request.POST
+
+    Returns:
+    A list of BlobInfo records corresponding to each upload.
+    Empty list if there are no blob-info records for field_name.
+    """
+
     if hasattr(request, '__uploads') == False:
         request.META['wsgi.input'].seek(0)
         fields = cgi.FieldStorage(

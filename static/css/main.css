@@ -5,3 +5,7 @@ body {
 .gitkit-user-card-menu{
     z-index: 1000 !important;
 }
+.error{
+    color: red;
+    font-weight: bold;
+}
