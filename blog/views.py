@@ -39,7 +39,7 @@ def signin(request):
 def create_blog(request):
     if request.method == 'POST':
         items = request.POST
-        if not items['title'] or not items['slug'] or items['body']:
+        if not items['title'] or not items['slug'] or not items['body']:
             messages.error(request, 'Title, Slug, Body are required fields.')
             return redirect('create_blog')
 
