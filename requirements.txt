@@ -1,4 +1,6 @@
 identity-toolkit-python-client>=0.1.6
-
 oauth2client==1.4.5
 pyOpenSSL==0.14
+pycrypto
+NoseGAE
+WebTest
