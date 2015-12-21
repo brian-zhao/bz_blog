@@ -5,20 +5,7 @@ from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
 from bz_blog.wsgi import application
-
-
-class TestBlog(ndb.Model):
-    title = ndb.StringProperty(required=True)
-    slug = ndb.StringProperty(required=True)
-    body = ndb.BlobProperty(required=True)
-    posted = ndb.DateTimeProperty(auto_now_add=True)
-    author = ndb.StringProperty()
-    blob_key = ndb.BlobKeyProperty(required=False)
-    thumnail = ndb.ComputedProperty(lambda self: images.get_serving_url(self.blob_key, size=32) if self.blob_key else '')
-
-    @classmethod
-    def query_blog(cls, ancestor_key):
-        return cls.query(ancestor=ancestor_key).order(-cls.posted)
+from blog.models import Blog
 
 
 class DatastoreTestCase(unittest.TestCase):
@@ -37,15 +24,30 @@ class DatastoreTestCase(unittest.TestCase):
         self.testbed.deactivate()
 
     def testInsertEntity(self):
-        tb = TestBlog(title='a', slug='a', body='a')
+        tb = Blog(title='a', slug='a', body='a')
         tb.put()
-        self.assertEqual(1, len(TestBlog.query().fetch(2)))
+        self.assertEqual(1, len(Blog.query().fetch(2)))
+
+    def testBlogEntry(self):
+        tb = Blog(title='KEIFJUE', slug='PDEMDKS', body='MDOWMF')
+        tb.put()
+        testapp = TestApp(application)
+        result = testapp.get('/')
+        self.assertIn('KEIFJUE', result.body)
+        self.assertIn('MDOWMF', result.body)
+
+    def testQueryBlog(self):
+        tb = Blog(title='abc', slug='abc', body='abc')
+        tb_key = tb.put()
+        qry = Blog.query_blog(tb_key)
+        result = qry.fetch()
+        self.assertEqual('abc', result[0].body)
 
     def testSort(self):
-        tb1 = TestBlog(title='first', slug='first', body='first')
+        tb1 = Blog(title='first', slug='first', body='first')
         tb1.put()
 
-        tb2 = TestBlog(title='second', slug='second', body='second')
+        tb2 = Blog(title='second', slug='second', body='second')
         tb2.put()
 
-        self.assertEqual('second', TestBlog.query().order(-TestBlog.posted).fetch(1)[0].title)
+        self.assertEqual('second', Blog.query().order(-Blog.posted).fetch(1)[0].title)
